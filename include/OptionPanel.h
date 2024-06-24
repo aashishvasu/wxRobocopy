@@ -3,10 +3,12 @@
 
 #include <wx/wx.h>
 
+class rcCpuArg;
+class rcFlagArgs;
+class rcCopyArg;
+
 // Events
 wxDECLARE_EVENT(rcEVT_OPTIONS_UPDATED, wxCommandEvent);
-
-class wxDynStringHashMap;
 
 class OptionPanel : public wxPanel
 {
@@ -22,19 +24,9 @@ private:
 	void SendEvent();
 	void OnOptionsChanged(wxCommandEvent& e);
 
-	// Command strings
-	wxString GetCopyArg() const;
-	wxString GetFlagArgs() const;
-	wxString GetCoreArg() const;
-	void AppendArg(wxString& cmdStr, const wxString& arg) const;
-
-	
-	wxDynStringHashMap* copyOptions;
-	wxDynStringHashMap* flagOptions;
-
-	wxChoice* copyChoice;
-	wxCheckListBox* flagsChoice;
-	wxChoice* coreChoice;
+	rcCopyArg* copyChoice;
+	rcFlagArgs* flagsChoice;
+	rcCpuArg* coreChoice;
 };
 
 #endif // OPTIONPANEL_H
