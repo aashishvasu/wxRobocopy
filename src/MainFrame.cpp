@@ -1,5 +1,8 @@
 ﻿#include "MainFrame.h"
 
+#include <wx/artprov.h>
+#include <wx/clipbrd.h>
+
 #include "OptionPanel.h"
 #include "data/Enums.h"
 
@@ -60,6 +63,14 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, 
 			wxDefaultSize,
 			wxTE_READONLY
 		);
+
+	clipBtn = new wxBitmapButton(
+			this, wxID_ANY,
+			wxArtProvider::GetBitmap(wxART_COPY, wxART_BUTTON),
+			wxDefaultPosition,
+			wxDefaultSize
+		);
+	clipBtn->SetToolTip("Copy robocopy command");
 	
 	// Layout nested sizers
 	// Flex grid for the source and target pickers
@@ -76,6 +87,7 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, 
 
 	wxFlexGridSizer* commandSizer = new wxFlexGridSizer(1, 2, wxDefaultSize);
 	commandSizer->Add(rcpCommandText, 0, wxALL | wxEXPAND, 5);
+	commandSizer->Add(clipBtn, 0, wxALL | wxEXPAND, 5);
 	commandSizer->AddGrowableCol(0, 1);
 
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
@@ -101,24 +113,41 @@ void MainFrame::BindEvents()
 
 	srcDirPicker->Bind(wxEVT_DIRPICKER_CHANGED, &MainFrame::OnSrcDirPicked, this);
 	dstDirPicker->Bind(wxEVT_DIRPICKER_CHANGED, &MainFrame::OnDstDirPicked, this);
+	clipBtn->Bind(wxEVT_BUTTON, &MainFrame::OnRcpCommandCopyClicked, this);
 }
 
 void MainFrame::OnSrcDirPicked(wxFileDirPickerEvent& e)
 {
-	GenerateRobocopyCmd();
+	(void)GenerateRobocopyCmd();
 }
 
 void MainFrame::OnDstDirPicked(wxFileDirPickerEvent& e)
 {
-	GenerateRobocopyCmd();
+	(void)GenerateRobocopyCmd();
 }
 
 void MainFrame::OnOptionsChanged(wxCommandEvent& e)
 {
-	GenerateRobocopyCmd();
+	(void)GenerateRobocopyCmd();
 }
 
-void MainFrame::GenerateRobocopyCmd()
+void MainFrame::OnRcpCommandCopyClicked(wxCommandEvent& e)
+{
+	wxString cmd = GenerateRobocopyCmd();
+	
+	// Here we will add the robocopy command to the OS clipboard
+	if(cmd.IsEmpty())
+		return;
+
+	// Open clipboard and add data
+	if (wxTheClipboard->Open())
+	{
+		wxTheClipboard->SetData( new wxTextDataObject(cmd) );
+		wxTheClipboard->Close();
+	}
+}
+
+wxString MainFrame::GenerateRobocopyCmd() const
 {
 	// Here we parse all relevant information into a robocopy command
 	wxString src = srcDirPicker->GetPath();
@@ -127,13 +156,15 @@ void MainFrame::GenerateRobocopyCmd()
 	// If source or destination is empty, then we can ignore
 	if(src.IsEmpty() || dst.IsEmpty())
 	{
-		return;
+		return wxEmptyString;
 	}
 
 	// Get relevant arguments from each option
 	const wxString command = "robocopy " + wxString::Format("%s %s %s", src, dst, optPanel->GetOptions());
 
 	rcpCommandText->SetValue(command);
+
+	return command;
 }
 
 void MainFrame::OnQuit(wxCommandEvent& WXUNUSED(event))

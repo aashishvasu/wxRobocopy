@@ -20,14 +20,18 @@ private:
 	void OnSrcDirPicked(wxFileDirPickerEvent& e);
 	void OnDstDirPicked(wxFileDirPickerEvent& e);
 	void OnOptionsChanged(wxCommandEvent& e);
+	void OnRcpCommandCopyClicked(wxCommandEvent& e);
 
 	// Robocopy
-	void GenerateRobocopyCmd();
+	wxString GenerateRobocopyCmd() const;
 
 	// Vars
 	// File pickers
 	wxDirPickerCtrl* srcDirPicker;
 	wxDirPickerCtrl* dstDirPicker;
+
+	// Buttons
+	wxBitmapButton* clipBtn;
 
 	// Panels
 	OptionPanel* optPanel;
