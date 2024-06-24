@@ -56,6 +56,7 @@ OptionPanel::~OptionPanel()
 wxString OptionPanel::GetOptions() const
 {
 	wxString cmdStr;
+	AppendArg(cmdStr, "/E");
 	AppendArg(cmdStr, GetCopyArg());
 	AppendArg(cmdStr, GetFlagArgs());
 	AppendArg(cmdStr, GetCoreArg());

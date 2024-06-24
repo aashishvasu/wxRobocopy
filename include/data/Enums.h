@@ -4,7 +4,8 @@
 enum
 {
 	ID_Quit = 1,
-	ID_About
+	ID_About,
+	ID_Run_Button
 };
 
 #endif // ENUMS_H

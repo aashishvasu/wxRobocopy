@@ -4,6 +4,8 @@
 #include <wx/clipbrd.h>
 
 #include "OptionPanel.h"
+#include "RobocopyHandler.h"
+
 #include "data/Enums.h"
 
 MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, wxDefaultPosition)
@@ -29,7 +31,7 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, 
 			wxID_ANY,
 			"Target"
 		);
-
+	
 	srcDirPicker = new wxDirPickerCtrl(
 			this,
 			wxID_ANY,
@@ -63,6 +65,7 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, 
 			wxDefaultSize,
 			wxTE_READONLY
 		);
+	rcpCommandText->Disable();
 
 	clipBtn = new wxBitmapButton(
 			this, wxID_ANY,
@@ -71,6 +74,32 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, 
 			wxDefaultSize
 		);
 	clipBtn->SetToolTip("Copy robocopy command");
+
+	rcpRunBtn = new wxButton(
+			this,
+			ID_Run_Button,
+			"Run Robocopy"
+		);
+	rcpRunBtn->Disable();
+
+	rcpStopBtn = new wxButton(
+			this,
+			ID_Run_Button,
+			"Abort"
+		);
+	rcpStopBtn->Hide();
+
+	rcpOutput = new wxTextCtrl(
+			this,
+			wxID_ANY,
+			"",
+			wxDefaultPosition,
+			wxDefaultSize,
+			wxTE_MULTILINE | wxTE_READONLY
+		);
+	rcpOutput->Hide();
+	
+	rcpHandler = new RobocopyHandler(this, rcpOutput);	
 	
 	// Layout nested sizers
 	// Flex grid for the source and target pickers
@@ -93,7 +122,10 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, 
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 	sizer->Add(fileBoxSizer, 0, wxALL | wxEXPAND, 5);
 	sizer->Add(optPanel, 0, wxALL | wxEXPAND);
-	sizer->Add(commandSizer, 0, wxALL | wxEXPAND, 5);
+	sizer->Add(commandSizer, 0, wxALL | wxEXPAND);
+	sizer->Add(rcpRunBtn, 0, wxALL | wxEXPAND, 5);
+	sizer->Add(rcpStopBtn, 0, wxALL | wxEXPAND, 5);
+	sizer->Add(rcpOutput, 1, wxALL | wxEXPAND, 5);
 	
 	SetSizer(sizer);
 
@@ -110,10 +142,15 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_MENU, &MainFrame::OnQuit, this, ID_Quit);
 	Bind(wxEVT_MENU, &MainFrame::OnAbout, this, ID_About);
 	Bind(rcEVT_OPTIONS_UPDATED, &MainFrame::OnOptionsChanged, this);
+	Bind(rcEVT_THREAD_STARTED, &MainFrame::OnRcpThreadStarted, this);
+	Bind(rcEVT_THREAD_STOPPED, &MainFrame::OnRcpThreadStopped, this);
 
 	srcDirPicker->Bind(wxEVT_DIRPICKER_CHANGED, &MainFrame::OnSrcDirPicked, this);
 	dstDirPicker->Bind(wxEVT_DIRPICKER_CHANGED, &MainFrame::OnDstDirPicked, this);
 	clipBtn->Bind(wxEVT_BUTTON, &MainFrame::OnRcpCommandCopyClicked, this);
+	rcpRunBtn->Bind(wxEVT_BUTTON, &MainFrame::OnRcpRunBtnClicked, this);
+	rcpStopBtn->Bind(wxEVT_BUTTON, &MainFrame::OnRcpStopBtnClicked, this);
+	
 }
 
 void MainFrame::OnSrcDirPicked(wxFileDirPickerEvent& e)
@@ -133,7 +170,7 @@ void MainFrame::OnOptionsChanged(wxCommandEvent& e)
 
 void MainFrame::OnRcpCommandCopyClicked(wxCommandEvent& e)
 {
-	wxString cmd = GenerateRobocopyCmd();
+	const wxString cmd = GenerateRobocopyCmd();
 	
 	// Here we will add the robocopy command to the OS clipboard
 	if(cmd.IsEmpty())
@@ -145,6 +182,41 @@ void MainFrame::OnRcpCommandCopyClicked(wxCommandEvent& e)
 		wxTheClipboard->SetData( new wxTextDataObject(cmd) );
 		wxTheClipboard->Close();
 	}
+}
+
+void MainFrame::OnRcpRunBtnClicked(wxCommandEvent& e)
+{
+	if(!rcpHandler)
+		return;
+
+	const wxString cmd = GenerateRobocopyCmd();
+	rcpOutput->Clear();
+	rcpHandler->Execute(cmd);
+}
+
+void MainFrame::OnRcpStopBtnClicked(wxCommandEvent& e)
+{
+	if(!rcpHandler)
+		return;
+
+	rcpHandler->Stop();
+}
+
+void MainFrame::OnRcpThreadStarted(wxCommandEvent& e)
+{
+	SetStatusText("Running...");
+	rcpRunBtn->Disable();
+	rcpStopBtn->Show();
+	rcpOutput->Show();
+	Layout();
+}
+
+void MainFrame::OnRcpThreadStopped(wxCommandEvent& e)
+{
+	SetStatusText("Ready");
+	rcpStopBtn->Hide();
+	rcpRunBtn->Enable();
+	Layout();
 }
 
 wxString MainFrame::GenerateRobocopyCmd() const
@@ -163,6 +235,10 @@ wxString MainFrame::GenerateRobocopyCmd() const
 	const wxString command = "robocopy " + wxString::Format("%s %s %s", src, dst, optPanel->GetOptions());
 
 	rcpCommandText->SetValue(command);
+
+	// If command is not empty, then enable the robocopy button
+	if(!command.IsEmpty())
+		rcpRunBtn->Enable();
 
 	return command;
 }

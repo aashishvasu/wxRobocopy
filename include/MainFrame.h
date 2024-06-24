@@ -4,6 +4,7 @@
 #include <wx/wx.h>
 #include <wx/filepicker.h>
 
+class RobocopyHandler;
 class OptionPanel;
 
 class MainFrame : public wxFrame
@@ -21,6 +22,10 @@ private:
 	void OnDstDirPicked(wxFileDirPickerEvent& e);
 	void OnOptionsChanged(wxCommandEvent& e);
 	void OnRcpCommandCopyClicked(wxCommandEvent& e);
+	void OnRcpRunBtnClicked(wxCommandEvent& e);
+	void OnRcpStopBtnClicked(wxCommandEvent& e);
+	void OnRcpThreadStarted(wxCommandEvent& e);
+	void OnRcpThreadStopped(wxCommandEvent& e);
 
 	// Robocopy
 	wxString GenerateRobocopyCmd() const;
@@ -36,8 +41,12 @@ private:
 	// Panels
 	OptionPanel* optPanel;
 
-	// Robocopy Text
+	// Robocopy
 	wxTextCtrl* rcpCommandText;
+	wxTextCtrl* rcpOutput;
+	wxButton* rcpRunBtn;
+	wxButton* rcpStopBtn;
+	RobocopyHandler* rcpHandler;
 };
 
 #endif // MAINFRAME_H
