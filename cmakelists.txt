@@ -28,20 +28,32 @@ message("SRC_FILES = ${SRC_FILES}")
 # Add executable
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SRC_FILES})
 
-# Set the output directory for the executable to be one level up
-set_target_properties(${PROJECT_NAME} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin
-)
+# Set custom binaries folder
+set(CUSTOM_BIN_DIR ${CMAKE_BINARY_DIR}/../../Binaries)
+
+# Set the output directory for the executable based on the architecture
+if(CMAKE_GENERATOR_PLATFORM STREQUAL "x64")
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CUSTOM_BIN_DIR}/x64/${PROJECT_NAME}
+        RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CUSTOM_BIN_DIR}/x64/${PROJECT_NAME}
+        RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CUSTOM_BIN_DIR}/x64/${PROJECT_NAME}
+	
+    )
+elseif(CMAKE_GENERATOR_PLATFORM STREQUAL "Win32")
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CUSTOM_BIN_DIR}/Win32/${PROJECT_NAME}
+        RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CUSTOM_BIN_DIR}/Win32/${PROJECT_NAME}
+        RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CUSTOM_BIN_DIR}/Win32/${PROJECT_NAME}
+    )
+endif()
 
 if(WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES
         WIN32_EXECUTABLE YES
     )
     # Link libraries
-    target_link_libraries(${PROJECT_NAME}
-        debug ${wxWidgets_LIBRARIES}
-        optimized ${wxWidgets_LIBRARIES}
-    )
+    target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES})
+    
      # Any other Windows-specific configurations
 elseif(UNIX)
     # Link libraries
