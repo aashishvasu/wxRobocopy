@@ -278,5 +278,5 @@ void MainFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void MainFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-	wxMessageBox("This is a wxWidgets Hello World example","About Hello World", wxOK | wxICON_INFORMATION, this);
+	wxMessageBox("GUI for the robocopy tool","About wxRobocopy", wxOK | wxICON_INFORMATION, this);
 }
