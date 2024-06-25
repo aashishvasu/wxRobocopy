@@ -4,6 +4,8 @@ GUI for Microsoft's [robocopy](https://learn.microsoft.com/en-us/windows-server/
 
 It's meant for people are not familiar or comfortable with the command line, and only exposes the most used functionality of robocopy to the UI.
 
+![Screenshot](docs/img/wxrc.png)
+
 ## Features
 
 - **Intuitive UI**: User-friendly interface for easy configuration of robocopy commands.
@@ -67,7 +69,7 @@ This will create zip files named like `wxRobocopy-v1.0-x64.zip` and `wxRobocopy-
 
 ## Contributing
 
-Contributions are welcome! Please fork this repository and submit pull requests. Ensure your changes are against the [dev](/aashishvasu/wxRobocopy/tree/dev) branch.
+Contributions are welcome! Please [fork this repository](https://github.com/aashishvasu/wxRobocopy/fork) and submit pull requests. Ensure your changes are against the [dev](https://github.com/aashishvasu/wxRobocopy/tree/dev) branch.
 
 ## License
 
