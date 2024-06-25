@@ -1,4 +1,4 @@
-﻿#ifndef OPTIONPANEL_H
+#ifndef OPTIONPANEL_H
 #define OPTIONPANEL_H
 
 #include <wx/wx.h>
@@ -6,6 +6,7 @@
 class rcCpuArg;
 class rcFlagArgs;
 class rcCopyArg;
+class rcDirArg;
 
 // Events
 wxDECLARE_EVENT(rcEVT_OPTIONS_UPDATED, wxCommandEvent);
@@ -25,6 +26,7 @@ private:
 	void OnOptionsChanged(wxCommandEvent& e);
 
 	rcCopyArg* copyChoice;
+	rcDirArg* dirChoice;
 	rcFlagArgs* flagsChoice;
 	rcCpuArg* coreChoice;
 };

@@ -3,6 +3,7 @@
 #include "wxPanels/rcCopyArg.h"
 #include "wxPanels/rcFlagArgs.h"
 #include "wxPanels/rcCpuArg.h"
+#include "wxPanels/rcDirArg.h"
 #include "utils/rcUtils.h"
 
 wxDEFINE_EVENT(rcEVT_OPTIONS_UPDATED, wxCommandEvent);
@@ -12,6 +13,9 @@ OptionPanel::OptionPanel(wxWindow* parent) : wxPanel(parent)
 	// Type of copying to be done
 	copyChoice = new rcCopyArg(this, "Copy Type");
 
+	// What files to copy
+	dirChoice = new rcDirArg(this, "Filter");
+
 	// Flags to be chosen
 	flagsChoice = new rcFlagArgs(this, "Flags");
 
@@ -19,9 +23,10 @@ OptionPanel::OptionPanel(wxWindow* parent) : wxPanel(parent)
 	coreChoice = new rcCpuArg(this, "CPU Threads");
 
 	// sizers
-	wxFlexGridSizer* gSizer = new wxFlexGridSizer(1, 3, wxDefaultSize);
-	gSizer->AddGrowableCol(1, 1);
+	wxFlexGridSizer* gSizer = new wxFlexGridSizer(1, 4, wxDefaultSize);
+	gSizer->AddGrowableCol(2, 1);
 	gSizer->Add(copyChoice, 1, wxALL | wxEXPAND, 5);
+	gSizer->Add(dirChoice, 1, wxALL | wxEXPAND, 5);
 	gSizer->Add(flagsChoice, 1, wxALL | wxEXPAND, 5);
 	gSizer->Add(coreChoice, 1, wxALL | wxEXPAND, 5);
 
@@ -36,6 +41,7 @@ wxString OptionPanel::GetOptions() const
 {
 	wxString cmdStr;
 	Application::AppendArg(cmdStr, copyChoice->GetArgs());
+	Application::AppendArg(cmdStr, dirChoice->GetArgs());
 	Application::AppendArg(cmdStr, flagsChoice->GetArgs());
 	Application::AppendArg(cmdStr, coreChoice->GetArgs());
 	
