@@ -1,4 +1,4 @@
-﻿#include "RobocopyHandler.h"
+#include "RobocopyHandler.h"
 
 wxDEFINE_EVENT(rcEVT_THREAD_STARTED, wxCommandEvent);
 wxDEFINE_EVENT(rcEVT_THREAD_STOPPED, wxCommandEvent);
@@ -75,12 +75,17 @@ void RobocopyHandler::SendStop()
 
 void RobocopyHandler::OnTerminate(wxProcessEvent& event)
 {
-	// Finally read output one more time
+	// Stop the timer before reading the final output
+	if (timer_->IsRunning())
+	{
+		timer_->Stop();
+	}
+	
+	// Read any remaining output
 	ReadOutput_Internal();
 
 	// Stop the reading
 	SendStop();
-	timer_->Stop();
 
 	if (process_)
 	{
