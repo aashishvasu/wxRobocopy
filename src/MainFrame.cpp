@@ -257,7 +257,7 @@ wxString MainFrame::GenerateRobocopyCmd() const
 	}
 
 	// Get relevant arguments from each option
-	const wxString command = "robocopy " + wxString::Format("%s %s %s", src, dst, optPanel->GetOptions());
+	const wxString command = "robocopy " + wxString::Format("\"%s\" \"%s\" %s", src, dst, optPanel->GetOptions());
 
 	rcpCommandText->SetValue(command);
 
