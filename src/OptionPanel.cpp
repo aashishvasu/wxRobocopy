@@ -49,6 +49,7 @@ wxString OptionPanel::GetOptions() const
 	Application::AppendArg(cmdStr, dirChoice->GetArgs());
 	Application::AppendArg(cmdStr, flagsChoice->GetArgs());
 	Application::AppendArg(cmdStr, coreChoice->GetArgs());
+	Application::AppendArg(cmdStr, logChoice->GetArgs());
 	
 	return cmdStr;
 }
