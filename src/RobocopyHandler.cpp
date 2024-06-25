@@ -1,4 +1,4 @@
-#include "RobocopyHandler.h"
+﻿#include "RobocopyHandler.h"
 
 wxDEFINE_EVENT(rcEVT_THREAD_STARTED, wxCommandEvent);
 wxDEFINE_EVENT(rcEVT_THREAD_STOPPED, wxCommandEvent);

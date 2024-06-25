@@ -1,4 +1,4 @@
-#include "MainFrame.h"
+﻿#include "MainFrame.h"
 
 #include <wx/artprov.h>
 #include <wx/clipbrd.h>
@@ -267,7 +267,7 @@ wxString MainFrame::GenerateRobocopyCmd() const
 		rcpRunBtn->Enable();
 		rcpDryRunBtn->Enable();
 	}
-
+	
 	return command;
 }
 

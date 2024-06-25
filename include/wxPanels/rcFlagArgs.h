@@ -2,14 +2,16 @@
 #define RCFLAGARG_H
 
 #include "wxOptionBase.h"
-#include "data/wxDynStringHashMap.h"
+
+class wxCheckListBox;
+class wxDynStringHashMap;
 
 class rcFlagArgs : public wxOptionBase
 {
 public:
 	rcFlagArgs(wxWindow* parent, const wxString& label);
-	~rcFlagArgs() override { delete flagOptions; }
-	
+	~rcFlagArgs() override;
+
 	wxString GetArgs() const override;
 
 private:

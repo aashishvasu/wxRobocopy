@@ -4,13 +4,17 @@
 
 rcFlagArgs::rcFlagArgs(wxWindow* parent, const wxString& label) : wxOptionBase(parent, label)
 {
-	flagOptions = new wxDynStringHashMap({"Include Empty Folders", "Restartable", "Backup", "Restartable with backup fallback"}, {"/E", "/Z", "/B", "/ZB"});
+	flagOptions = new wxDynStringHashMap({"Restartable", "Backup", "Restartable with backup fallback"}, {"/Z", "/B", "/ZB"});
 	flagsChoice = new wxCheckListBox(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, flagOptions->keys());
-	flagsChoice->Check(0, true);
 
 	sizer_->Add(flagsChoice, 0, wxALL | wxEXPAND, 5);
 
 	rcFlagArgs::BindEvents();
+}
+
+rcFlagArgs::~rcFlagArgs()
+{
+	delete flagOptions;
 }
 
 wxString rcFlagArgs::GetArgs() const

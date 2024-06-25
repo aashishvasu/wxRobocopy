@@ -2,14 +2,16 @@
 #define RCCOPYARG_H
 
 #include "wxOptionBase.h"
-#include "data/wxDynStringHashMap.h"
+
+class wxChoice;
+class wxDynStringHashMap;
 
 class rcCopyArg : public wxOptionBase
 {
 public:
 	rcCopyArg(wxWindow* parent, const wxString& label);
-	~rcCopyArg() override { delete copyOptions; }
-	
+	~rcCopyArg() override;
+
 	wxString GetArgs() const override;
 
 private:

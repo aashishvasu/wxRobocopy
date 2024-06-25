@@ -15,6 +15,11 @@ rcCopyArg::rcCopyArg(wxWindow* parent, const wxString& label) : wxOptionBase(par
 	rcCopyArg::BindEvents();
 }
 
+rcCopyArg::~rcCopyArg()
+{
+	delete copyOptions;
+}
+
 wxString rcCopyArg::GetArgs() const
 {
 	return copyOptions->values()[copyChoice->GetCurrentSelection()];
