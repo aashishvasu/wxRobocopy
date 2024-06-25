@@ -4,6 +4,7 @@
 #include "wxPanels/rcFlagArgs.h"
 #include "wxPanels/rcCpuArg.h"
 #include "wxPanels/rcDirArg.h"
+#include "wxPanels/rcLogArgs.h"
 #include "utils/rcUtils.h"
 
 wxDEFINE_EVENT(rcEVT_OPTIONS_UPDATED, wxCommandEvent);
@@ -22,13 +23,17 @@ OptionPanel::OptionPanel(wxWindow* parent) : wxPanel(parent)
 	// Number of CPU thread choice
 	coreChoice = new rcCpuArg(this, "CPU Threads");
 
+	// What type of logging to filter
+	logChoice = new rcLogArgs(this, "Logging");
+
 	// sizers
-	wxFlexGridSizer* gSizer = new wxFlexGridSizer(1, 4, wxDefaultSize);
+	wxFlexGridSizer* gSizer = new wxFlexGridSizer(1, 5, wxDefaultSize);
 	gSizer->AddGrowableCol(2, 1);
 	gSizer->Add(copyChoice, 1, wxALL | wxEXPAND, 5);
 	gSizer->Add(dirChoice, 1, wxALL | wxEXPAND, 5);
 	gSizer->Add(flagsChoice, 1, wxALL | wxEXPAND, 5);
 	gSizer->Add(coreChoice, 1, wxALL | wxEXPAND, 5);
+	gSizer->Add(logChoice, 1, wxALL | wxEXPAND, 5);
 
 	SetSizer(gSizer);
 

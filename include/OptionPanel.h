@@ -3,6 +3,7 @@
 
 #include <wx/wx.h>
 
+class rcLogArgs;
 class rcCpuArg;
 class rcFlagArgs;
 class rcCopyArg;
@@ -28,6 +29,7 @@ private:
 	rcCopyArg* copyChoice;
 	rcDirArg* dirChoice;
 	rcFlagArgs* flagsChoice;
+	rcLogArgs* logChoice;
 	rcCpuArg* coreChoice;
 };
 
