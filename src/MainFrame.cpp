@@ -1,4 +1,4 @@
-﻿#include "MainFrame.h"
+#include "MainFrame.h"
 
 #include <wx/artprov.h>
 #include <wx/clipbrd.h>
@@ -81,6 +81,13 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, 
 			"Run Robocopy"
 		);
 	rcpRunBtn->Disable();
+	
+	rcpDryRunBtn = new wxButton(
+			this,
+			ID_DryRun_Button,
+			"Dry Run"
+		);
+	rcpDryRunBtn->Disable();
 
 	rcpStopBtn = new wxButton(
 			this,
@@ -119,11 +126,15 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, 
 	commandSizer->Add(clipBtn, 0, wxALL | wxEXPAND, 5);
 	commandSizer->AddGrowableCol(0, 1);
 
+	wxBoxSizer* runSizer = new wxBoxSizer(wxHORIZONTAL);
+	runSizer->Add(rcpRunBtn, 1, wxALL | wxEXPAND);
+	runSizer->Add(rcpDryRunBtn, 0, wxALL | wxEXPAND);
+
 	wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 	sizer->Add(fileBoxSizer, 0, wxALL | wxEXPAND, 5);
 	sizer->Add(optPanel, 0, wxALL | wxEXPAND);
 	sizer->Add(commandSizer, 0, wxALL | wxEXPAND);
-	sizer->Add(rcpRunBtn, 0, wxALL | wxEXPAND, 5);
+	sizer->Add(runSizer, 0, wxALL | wxEXPAND, 5);
 	sizer->Add(rcpStopBtn, 0, wxALL | wxEXPAND, 5);
 	sizer->Add(rcpOutput, 1, wxALL | wxEXPAND, 5);
 	
@@ -149,6 +160,7 @@ void MainFrame::BindEvents()
 	dstDirPicker->Bind(wxEVT_DIRPICKER_CHANGED, &MainFrame::OnDstDirPicked, this);
 	clipBtn->Bind(wxEVT_BUTTON, &MainFrame::OnRcpCommandCopyClicked, this);
 	rcpRunBtn->Bind(wxEVT_BUTTON, &MainFrame::OnRcpRunBtnClicked, this);
+	rcpDryRunBtn->Bind(wxEVT_BUTTON, &MainFrame::OnRcpDryRunClicked, this);
 	rcpStopBtn->Bind(wxEVT_BUTTON, &MainFrame::OnRcpStopBtnClicked, this);
 	
 }
@@ -194,6 +206,17 @@ void MainFrame::OnRcpRunBtnClicked(wxCommandEvent& e)
 	rcpHandler->Execute(cmd);
 }
 
+void MainFrame::OnRcpDryRunClicked(wxCommandEvent& e)
+{
+	if(!rcpHandler)
+		return;
+
+	// Adding the /L command runs robocopy in report only mode
+	const wxString cmd = GenerateRobocopyCmd() + " /L";
+	rcpOutput->Clear();
+	rcpHandler->Execute(cmd);
+}
+
 void MainFrame::OnRcpStopBtnClicked(wxCommandEvent& e)
 {
 	if(!rcpHandler)
@@ -206,6 +229,7 @@ void MainFrame::OnRcpThreadStarted(wxCommandEvent& e)
 {
 	SetStatusText("Running...");
 	rcpRunBtn->Disable();
+	rcpDryRunBtn->Disable();
 	rcpStopBtn->Show();
 	rcpOutput->Show();
 	Layout();
@@ -216,6 +240,7 @@ void MainFrame::OnRcpThreadStopped(wxCommandEvent& e)
 	SetStatusText("Ready");
 	rcpStopBtn->Hide();
 	rcpRunBtn->Enable();
+	rcpDryRunBtn->Enable();
 	Layout();
 }
 
@@ -238,7 +263,10 @@ wxString MainFrame::GenerateRobocopyCmd() const
 
 	// If command is not empty, then enable the robocopy button
 	if(!command.IsEmpty())
+	{
 		rcpRunBtn->Enable();
+		rcpDryRunBtn->Enable();
+	}
 
 	return command;
 }

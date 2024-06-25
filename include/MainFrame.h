@@ -21,9 +21,12 @@ private:
 	void OnSrcDirPicked(wxFileDirPickerEvent& e);
 	void OnDstDirPicked(wxFileDirPickerEvent& e);
 	void OnOptionsChanged(wxCommandEvent& e);
+	
 	void OnRcpCommandCopyClicked(wxCommandEvent& e);
 	void OnRcpRunBtnClicked(wxCommandEvent& e);
+	void OnRcpDryRunClicked(wxCommandEvent& e);
 	void OnRcpStopBtnClicked(wxCommandEvent& e);
+	
 	void OnRcpThreadStarted(wxCommandEvent& e);
 	void OnRcpThreadStopped(wxCommandEvent& e);
 
@@ -45,6 +48,7 @@ private:
 	wxTextCtrl* rcpCommandText;
 	wxTextCtrl* rcpOutput;
 	wxButton* rcpRunBtn;
+	wxButton* rcpDryRunBtn;
 	wxButton* rcpStopBtn;
 	RobocopyHandler* rcpHandler;
 };
