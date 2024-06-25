@@ -102,7 +102,7 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, 
 			"",
 			wxDefaultPosition,
 			wxDefaultSize,
-			wxTE_MULTILINE | wxTE_READONLY
+			wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL | wxVSCROLL
 		);
 	rcpOutput->Hide();
 	
