@@ -1,5 +1,5 @@
-﻿#ifndef RCFLAGARG_H
-#define RCFLAGARG_H
+﻿#ifndef RCFLAGARGS_H
+#define RCFLAGARGS_H
 
 #include "wxOptionBase.h"
 
@@ -9,7 +9,7 @@ class wxDynStringHashMap;
 class rcFlagArgs : public wxOptionBase
 {
 public:
-	rcFlagArgs(wxWindow* parent, const wxString& label);
+	rcFlagArgs(wxWindow* parent, const wxString& label, long style = wxBORDER_DEFAULT);
 	~rcFlagArgs() override;
 
 	wxString GetArgs() const override;
@@ -21,4 +21,4 @@ private:
 	wxCheckListBox* flagsChoice;
 };
 
-#endif // RCFLAGARG_H
+#endif // RCFLAGARGS_H

@@ -3,14 +3,14 @@
 #include <wx/choice.h>
 #include "data/wxDynStringHashMap.h"
 
-rcCopyArg::rcCopyArg(wxWindow* parent, const wxString& label) : wxOptionBase(parent, label)
+rcCopyArg::rcCopyArg(wxWindow* parent, const wxString& label, long style) : wxOptionBase(parent, label)
 {
 	// Type of copying to be done
 	copyOptions = new wxDynStringHashMap({"Normal Copy", "Sync/Mirror", "Move"}, {"", "/MIR", "/MOVE"});
-	copyChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, copyOptions->keys());
+	copyChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, copyOptions->keys(), style);
 	copyChoice->SetSelection(0);
 
-	sizer_->Add(copyChoice, 0, wxALL | wxEXPAND, 5);
+	sizer_->Add(copyChoice, 1, wxALL | wxEXPAND, 5);
 
 	rcCopyArg::BindEvents();
 }

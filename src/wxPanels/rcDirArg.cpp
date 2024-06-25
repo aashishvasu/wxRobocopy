@@ -3,14 +3,14 @@
 #include <wx/choice.h>
 #include "data/wxDynStringHashMap.h"
 
-rcDirArg::rcDirArg(wxWindow* parent, const wxString& label) : wxOptionBase(parent, label)
+rcDirArg::rcDirArg(wxWindow* parent, const wxString& label, long style) : wxOptionBase(parent, label)
 {
 	// Choose what type of filtering to use when copying
 	dirOptions = new wxDynStringHashMap({"Copy non empty subfolders", "Copy everything", "Copy only files"}, {"/S", "/E", ""});
-	dirChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, dirOptions->keys());
+	dirChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, dirOptions->keys(), style);
 	dirChoice->SetSelection(0);
 
-	sizer_->Add(dirChoice, 0, wxALL | wxEXPAND, 5);
+	sizer_->Add(dirChoice, 1, wxALL | wxEXPAND, 5);
 
 	rcDirArg::BindEvents();
 }

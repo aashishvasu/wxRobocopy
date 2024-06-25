@@ -2,12 +2,12 @@
 
 #include "data/wxDynStringHashMap.h"
 
-rcFlagArgs::rcFlagArgs(wxWindow* parent, const wxString& label) : wxOptionBase(parent, label)
+rcFlagArgs::rcFlagArgs(wxWindow* parent, const wxString& label, long style) : wxOptionBase(parent, label)
 {
 	flagOptions = new wxDynStringHashMap({"Restartable", "Backup", "Restartable with backup fallback"}, {"/Z", "/B", "/ZB"});
-	flagsChoice = new wxCheckListBox(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, flagOptions->keys());
+	flagsChoice = new wxCheckListBox(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, flagOptions->keys(), style);
 
-	sizer_->Add(flagsChoice, 0, wxALL | wxEXPAND, 5);
+	sizer_->Add(flagsChoice, 1, wxALL | wxEXPAND, 5);
 
 	rcFlagArgs::BindEvents();
 }

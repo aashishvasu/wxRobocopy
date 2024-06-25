@@ -9,7 +9,7 @@ class wxDynStringHashMap;
 class rcDirArg : public wxOptionBase
 {
 public:
-	rcDirArg(wxWindow* parent, const wxString& label);
+	rcDirArg(wxWindow* parent, const wxString& label, long style = wxBORDER_DEFAULT);
 	~rcDirArg() override;
 
 	wxString GetArgs() const override;

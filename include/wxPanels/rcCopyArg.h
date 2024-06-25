@@ -9,7 +9,7 @@ class wxDynStringHashMap;
 class rcCopyArg : public wxOptionBase
 {
 public:
-	rcCopyArg(wxWindow* parent, const wxString& label);
+	rcCopyArg(wxWindow* parent, const wxString& label, long style = wxBORDER_DEFAULT);
 	~rcCopyArg() override;
 
 	wxString GetArgs() const override;

@@ -2,7 +2,7 @@
 
 #include "utils/CoreCount.h"
 
-rcCpuArg::rcCpuArg(wxWindow* parent, const wxString& label) : wxOptionBase(parent, label)
+rcCpuArg::rcCpuArg(wxWindow* parent, const wxString& label, long style) : wxOptionBase(parent, label)
 {
 	// Number of CPU thread choice
 	const int numCores = wxMin(wxMax(1, GetCPUCoreCount()), 128);
@@ -11,10 +11,10 @@ rcCpuArg::rcCpuArg(wxWindow* parent, const wxString& label) : wxOptionBase(paren
 	{
 		coreChoices.Add(wxString::Format("%d", i));
 	}
-	coreChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, coreChoices);
+	coreChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, coreChoices, style);
 	coreChoice->SetSelection(0);
 
-	sizer_->Add(coreChoice, 0, wxALL | wxEXPAND, 5);
+	sizer_->Add(coreChoice, 1, wxALL | wxEXPAND, 5);
 
 	rcCpuArg::BindEvents();
 }
