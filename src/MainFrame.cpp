@@ -156,8 +156,8 @@ void MainFrame::BindEvents()
 	Bind(rcEVT_THREAD_STARTED, &MainFrame::OnRcpThreadStarted, this);
 	Bind(rcEVT_THREAD_STOPPED, &MainFrame::OnRcpThreadStopped, this);
 
-	srcDirPicker->Bind(wxEVT_DIRPICKER_CHANGED, &MainFrame::OnSrcDirPicked, this);
-	dstDirPicker->Bind(wxEVT_DIRPICKER_CHANGED, &MainFrame::OnDstDirPicked, this);
+	srcDirPicker->Bind(wxEVT_DIRPICKER_CHANGED, &MainFrame::OnDirPicked, this);
+	dstDirPicker->Bind(wxEVT_DIRPICKER_CHANGED, &MainFrame::OnDirPicked, this);
 	clipBtn->Bind(wxEVT_BUTTON, &MainFrame::OnRcpCommandCopyClicked, this);
 	rcpRunBtn->Bind(wxEVT_BUTTON, &MainFrame::OnRcpRunBtnClicked, this);
 	rcpDryRunBtn->Bind(wxEVT_BUTTON, &MainFrame::OnRcpDryRunClicked, this);
@@ -165,12 +165,7 @@ void MainFrame::BindEvents()
 	
 }
 
-void MainFrame::OnSrcDirPicked(wxFileDirPickerEvent& e)
-{
-	(void)GenerateRobocopyCmd();
-}
-
-void MainFrame::OnDstDirPicked(wxFileDirPickerEvent& e)
+void MainFrame::OnDirPicked(wxFileDirPickerEvent& e)
 {
 	(void)GenerateRobocopyCmd();
 }

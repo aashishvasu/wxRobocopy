@@ -18,8 +18,7 @@ private:
 
 	// Events
 	void BindEvents();
-	void OnSrcDirPicked(wxFileDirPickerEvent& e);
-	void OnDstDirPicked(wxFileDirPickerEvent& e);
+	void OnDirPicked(wxFileDirPickerEvent& e);
 	void OnOptionsChanged(wxCommandEvent& e);
 	
 	void OnRcpCommandCopyClicked(wxCommandEvent& e);
