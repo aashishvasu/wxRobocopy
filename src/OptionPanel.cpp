@@ -1,30 +1,57 @@
 ﻿#include "OptionPanel.h"
 
-#include "wxPanels/rcCopyArg.h"
-#include "wxPanels/rcFlagArgs.h"
 #include "wxPanels/rcCpuArg.h"
-#include "wxPanels/rcDirArg.h"
-#include "wxPanels/rcLogArgs.h"
+#include "wxPanels/rcOptionChoice.h"
+#include "wxPanels/rcOptionChecklist.h"
 #include "utils/rcUtils.h"
+#include "data/wxDynStringHashMap.h"
 
 wxDEFINE_EVENT(rcEVT_OPTIONS_UPDATED, wxCommandEvent);
 
 OptionPanel::OptionPanel(wxWindow* parent) : wxPanel(parent)
 {
 	// Type of copying to be done
-	copyChoice = new rcCopyArg(this, "Copy Type");
+	copyChoice = new rcOptionChoice(
+		this,
+		"Copy Type",
+		new wxDynStringHashMap(
+			{"Normal Copy", "Sync/Mirror", "Move"},
+			{"", "/MIR", "/MOVE"}
+		)
+	);
 
 	// What files to copy
-	dirChoice = new rcDirArg(this, "Filter");
+	dirChoice = new rcOptionChoice(
+		this,
+		"Filter",
+		new wxDynStringHashMap(
+			{"Copy non empty subfolders", "Copy everything", "Copy only files"},
+			{"/S", "/E", ""}
+		)
+	);
 
 	// Flags to be chosen
-	flagsChoice = new rcFlagArgs(this, "Flags");
+	flagsChoice = new rcOptionChecklist(
+		this,
+		"Flags",
+		new wxDynStringHashMap(
+			{"Restartable", "Backup", "Restartable with backup fallback"},
+			{"/Z", "/B", "/ZB"}
+		)
+	);
 
 	// Number of CPU thread choice
 	coreChoice = new rcCpuArg(this, "CPU Threads");
 
 	// What type of logging to filter
-	logChoice = new rcLogArgs(this, "Logging");
+	logChoice = new rcOptionChecklist(
+		this,
+		"Logging",
+		new wxDynStringHashMap(
+			{"No File List", "No Folder List", "No Progress", "No File Size", "No File Class"},
+			{"/NFL", "/NDL", "/NP", "/NS", "/NC"}
+		)
+	);
 
 	// sizers
 	wxFlexGridSizer* gSizer = new wxFlexGridSizer(1, 5, wxDefaultSize);
