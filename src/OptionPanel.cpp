@@ -25,7 +25,7 @@ OptionPanel::OptionPanel(wxWindow* parent) : wxPanel(parent)
 		this,
 		"Filter",
 		new wxDynStringHashMap(
-			{"Copy non empty subfolders", "Copy everything", "Copy only files"},
+			{"Non empty subfolders", "Everything", "Only files"},
 			{"/S", "/E", ""}
 		)
 	);
