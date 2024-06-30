@@ -12,7 +12,7 @@ namespace Application
 	// Version numbers
 	constexpr int MAJ_VER = 1;
 	constexpr int MIN_VER = 0;
-	constexpr int PAT_VER = 0;
+	constexpr int PAT_VER = 1;
 
 	/**
 	 * Generates the semantic version string.
