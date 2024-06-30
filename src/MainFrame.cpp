@@ -54,6 +54,12 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, 
 			wxDefaultValidator,
 			"Target"
 		);
+	// Retrieve the wxTextCtrl and apply wxTE_PROCESS_ENTER
+	wxTextCtrl* srcTextCtrl = srcDirPicker->GetTextCtrl();
+	srcTextCtrl->SetWindowStyleFlag(srcTextCtrl->GetWindowStyle() | wxTE_PROCESS_ENTER);
+
+	wxTextCtrl* dstTextCtrl = dstDirPicker->GetTextCtrl();
+	dstTextCtrl->SetWindowStyleFlag(dstTextCtrl->GetWindowStyle() | wxTE_PROCESS_ENTER);
 
 	optPanel = new OptionPanel(this);
 
@@ -158,6 +164,9 @@ void MainFrame::BindEvents()
 
 	srcDirPicker->Bind(wxEVT_DIRPICKER_CHANGED, &MainFrame::OnDirPicked, this);
 	dstDirPicker->Bind(wxEVT_DIRPICKER_CHANGED, &MainFrame::OnDirPicked, this);
+	srcDirPicker->GetTextCtrl()->Bind(wxEVT_TEXT_ENTER, &MainFrame::OnTextEnter, this);
+	dstDirPicker->GetTextCtrl()->Bind(wxEVT_TEXT_ENTER, &MainFrame::OnTextEnter, this);
+	
 	clipBtn->Bind(wxEVT_BUTTON, &MainFrame::OnRcpCommandCopyClicked, this);
 	rcpRunBtn->Bind(wxEVT_BUTTON, &MainFrame::OnRcpRunBtnClicked, this);
 	rcpDryRunBtn->Bind(wxEVT_BUTTON, &MainFrame::OnRcpDryRunClicked, this);
@@ -167,7 +176,52 @@ void MainFrame::BindEvents()
 
 void MainFrame::OnDirPicked(wxFileDirPickerEvent& e)
 {
-	(void)GenerateRobocopyCmd();
+	wxString src = srcDirPicker->GetPath();
+	wxString dst = dstDirPicker->GetPath();
+
+	// Log the paths for debugging
+	wxLogDebug("Source Path: %s", src);
+	wxLogDebug("Destination Path: %s", dst);
+
+	// Ensure the paths are not empty
+	if (src.IsEmpty() || dst.IsEmpty())
+	{
+		wxLogDebug("One of the paths is empty. Ignoring the event.");
+		return;
+	}
+
+	// Validate the paths
+	if (!wxDirExists(src))
+	{
+		wxLogDebug("Source path does not exist: %s", src);
+		return;
+	}
+
+	if (!wxDirExists(dst))
+	{
+		wxLogDebug("Destination path does not exist: %s", dst);
+		return;
+	}
+
+	// Generate the robocopy command
+	wxString command = GenerateRobocopyCmd();
+	wxLogDebug("Generated robocopy command: %s", command);
+}
+
+void MainFrame::OnTextEnter(wxCommandEvent& e)
+{
+	wxTextCtrl* textCtrl = static_cast<wxTextCtrl*>(e.GetEventObject());
+	wxString path = textCtrl->GetValue();
+
+	// Validate the path
+	if (!wxDirExists(path))
+	{
+		return;
+	}
+
+	// Manually create and post the directory picker event
+	wxFileDirPickerEvent pickerEvent(wxEVT_DIRPICKER_CHANGED, textCtrl, textCtrl->GetId(), path);
+	wxPostEvent(this, pickerEvent);
 }
 
 void MainFrame::OnOptionsChanged(wxCommandEvent& e)

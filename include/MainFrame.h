@@ -19,6 +19,7 @@ private:
 	// Events
 	void BindEvents();
 	void OnDirPicked(wxFileDirPickerEvent& e);
+	void OnTextEnter(wxCommandEvent& e);
 	void OnOptionsChanged(wxCommandEvent& e);
 	
 	void OnRcpCommandCopyClicked(wxCommandEvent& e);

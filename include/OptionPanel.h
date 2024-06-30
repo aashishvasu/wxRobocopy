@@ -3,11 +3,9 @@
 
 #include <wx/wx.h>
 
-class rcLogArgs;
 class rcCpuArg;
-class rcFlagArgs;
-class rcCopyArg;
-class rcDirArg;
+class rcOptionChecklist;
+class rcOptionChoice;
 
 // Events
 wxDECLARE_EVENT(rcEVT_OPTIONS_UPDATED, wxCommandEvent);
@@ -26,10 +24,10 @@ private:
 	void SendEvent();
 	void OnOptionsChanged(wxCommandEvent& e);
 
-	rcCopyArg* copyChoice;
-	rcDirArg* dirChoice;
-	rcFlagArgs* flagsChoice;
-	rcLogArgs* logChoice;
+	rcOptionChoice* copyChoice;
+	rcOptionChoice* dirChoice;
+	rcOptionChecklist* flagsChoice;
+	rcOptionChecklist* logChoice;
 	rcCpuArg* coreChoice;
 };
 

@@ -16,7 +16,6 @@ private:
 	void BindEvents() override;
 	
 	wxChoice* coreChoice;
-	
 };
 
 #endif // RCCPUARG_H
